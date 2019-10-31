@@ -3,4 +3,8 @@ project(risingCity)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(risingCity main.cpp)
+include_directories(${CMAKE_SOURCE_DIR})
+
+set(SRC main.cpp RBT.cpp)
+
+add_executable(risingCity ${SRC})
