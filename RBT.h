@@ -6,7 +6,7 @@
 #define RBT_H
 
 #include <cstdint>
-#include <tuple>
+#include <Node.h>
 
 class RBT;
 
@@ -16,22 +16,17 @@ enum COLOR
     BLACK
 };
 
-class Node
+class NodeRBT : public Node
 {
 private:
     uint8_t mColor;
-    Node *mLeft = nullptr, *mRight = nullptr, *mParent = nullptr;
-
-    /// buildingNums, executed_time, total_time
-    struct Data
-    {
-        uint buildingNums;
-        ulong executedTime;
-        ulong totalTime;
-    } mData;
+    NodeRBT *mLeft = nullptr, *mRight = nullptr, *mParent = nullptr;
 
 public:
-    Node(uint buildingNums, ulong totalTime);
+    NodeRBT(uint buildingNums, ulong totalTime);
+
+    bool operator< (const NodeRBT& rhs);
+    bool operator> (const NodeRBT& rhs);
 
 friend RBT;
 };
@@ -44,12 +39,12 @@ public:
         root = nullptr;
     }
 
-    void insertNode(Node* p);
+    void insertNode(NodeRBT* p);
 
-    void deleteNode(Node* p);
+    void deleteNode(NodeRBT* p);
 
 private:
-    Node *root;
+    NodeRBT *root;
 };
 
 

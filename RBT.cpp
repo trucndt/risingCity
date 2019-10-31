@@ -6,6 +6,16 @@
 
 using namespace std;
 
-Node::Node(uint buildingNums, ulong totalTime)
-    : mColor(RED), mData{buildingNums, 0, totalTime}
+NodeRBT::NodeRBT(uint buildingNums, ulong totalTime)
+    : Node(buildingNums, totalTime), mColor(RED)
 {}
+
+bool NodeRBT::operator<(const NodeRBT &rhs)
+{
+    return this->mData.buildingNums < rhs.mData.buildingNums;
+}
+
+bool NodeRBT::operator>(const NodeRBT &rhs)
+{
+    return this->mData.buildingNums > rhs.mData.buildingNums;
+}
