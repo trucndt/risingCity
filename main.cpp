@@ -1,7 +1,8 @@
-#include <iostream>
+#include <Simulator.h>
 
-int main()
+int main(int argc, char **argv)
 {
-    std::cout << "Hello, World!" << std::endl;
+    Simulator::initialize(argv[1]);
+    Simulator::loop();
     return 0;
 }
