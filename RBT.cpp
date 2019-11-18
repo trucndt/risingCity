@@ -7,15 +7,15 @@
 using namespace std;
 
 NodeRBT::NodeRBT(uint buildingNums, ulong totalTime)
-    : Node(buildingNums, totalTime), mColor(RED)
+    : Node(buildingNums, totalTime), color_(RED)
 {}
 
 bool NodeRBT::operator<(const NodeRBT &rhs)
 {
-    return this->mData.buildingNums < rhs.mData.buildingNums;
+    return this->data_.buildingNums < rhs.data_.buildingNums;
 }
 
 bool NodeRBT::operator>(const NodeRBT &rhs)
 {
-    return this->mData.buildingNums > rhs.mData.buildingNums;
+    return this->data_.buildingNums > rhs.data_.buildingNums;
 }

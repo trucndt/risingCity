@@ -5,14 +5,14 @@
 #include "Node.h"
 
 Node::Node(uint buildingNums, ulong totalTime)
-    : mData{buildingNums, 0, totalTime} {}
+    : data_{buildingNums, 0, totalTime} {}
 
 bool Node::operator>(const Node &rhs) const
 {
-    return this->mData.executedTime > rhs.mData.executedTime;
+    return this->data_.executedTime > rhs.data_.executedTime;
 }
 
 bool Node::operator<(const Node &rhs) const
 {
-    return this->mData.executedTime < rhs.mData.executedTime;
+    return this->data_.executedTime < rhs.data_.executedTime;
 }

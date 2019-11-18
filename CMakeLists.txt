@@ -5,6 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-set(SRC main.cpp RBT.cpp Node.cpp)
+set(SRC main.cpp RBT.cpp Node.cpp Simulator.cpp)
 
 add_executable(risingCity ${SRC})

@@ -23,7 +23,7 @@ protected:
         uint buildingNums;
         ulong executedTime;
         ulong totalTime;
-    } mData;
+    } data_;
 };
 
 

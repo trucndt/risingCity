@@ -19,8 +19,8 @@ enum COLOR
 class NodeRBT : public Node
 {
 private:
-    uint8_t mColor;
-    NodeRBT *mLeft = nullptr, *mRight = nullptr, *mParent = nullptr;
+    uint8_t color_;
+    NodeRBT *left_ = nullptr, *right_ = nullptr, *parent_ = nullptr;
 
 public:
     NodeRBT(uint buildingNums, ulong totalTime);
@@ -36,7 +36,7 @@ class RBT
 public:
     RBT()
     {
-        root = nullptr;
+        root_ = nullptr;
     }
 
     void insertNode(NodeRBT* p);
@@ -44,7 +44,7 @@ public:
     void deleteNode(NodeRBT* p);
 
 private:
-    NodeRBT *root;
+    NodeRBT *root_;
 };
 
 
