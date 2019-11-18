@@ -28,15 +28,19 @@ void Simulator::loop()
 
         s_timestamp = s_pendingCommand.arrivalTime;
 
+        auto comma = s_pendingCommand.data.find(',');
         switch (s_pendingCommand.eventType)
         {
-        case INSERT:break;
         case PRINT1:
             printBuilding(stoi(s_pendingCommand.data));
             break;
         case PRINT2:
-            auto comma = s_pendingCommand.data.find(',');
             printBuilding(stoi(s_pendingCommand.data.substr(0, comma)), stoi(s_pendingCommand.data.substr(comma + 1)));
+            break;
+        case INSERT:
+            auto nodeRbt = new NodeRBT(stoi(s_pendingCommand.data.substr(0, comma)), stoi(s_pendingCommand.data.substr(comma + 1)));
+            s_rbt->insertNode(nodeRbt);
+            break;
         }
     }
 }

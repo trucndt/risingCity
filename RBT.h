@@ -25,8 +25,10 @@ private:
 public:
     NodeRBT(uint buildingNums, ulong totalTime);
 
-    bool operator< (const NodeRBT& rhs);
-    bool operator> (const NodeRBT& rhs);
+    NodeRBT* getUncleNode();
+
+    bool operator< (const NodeRBT &rhs);
+    bool operator> (const NodeRBT &rhs);
 
 friend RBT;
 };
@@ -39,12 +41,27 @@ public:
         root_ = nullptr;
     }
 
+    /**
+     * Insert a node to this tree
+     * @param p a NodeRBT to insert
+     */
     void insertNode(NodeRBT* p);
 
     void deleteNode(NodeRBT* p);
 
 private:
     NodeRBT *root_;
+
+    /**
+     * Insert node to the tree using the Binary Search Tree algorithm
+     * @param p node to insert
+     */
+    void insertNodeBST(NodeRBT *p);
+
+    void rotateRR(NodeRBT* y);
+    void rotateLL(NodeRBT* y);
+    void rotateRL(NodeRBT* p);
+    void rotateLR(NodeRBT* p);
 };
 
 

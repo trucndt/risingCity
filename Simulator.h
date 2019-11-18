@@ -16,8 +16,15 @@ public:
     // Disallow creating an instance of this object
     Simulator() = delete;
 
+    /**
+     * Initialize the Simulator
+     * @param inputFileName path to input file
+     */
     static void initialize(const std::string& inputFileName);
 
+    /**
+     * Implement event loop for the simulator
+     */
     static void loop();
 
 private:
@@ -44,8 +51,17 @@ private:
      */
     static void parseCommand(const std::string& cmdStr);
 
+    /**
+     * Print the triplet buildingNum,executed_time,total_time
+     * @param num1 the buildingNum
+     */
     static void printBuilding(uint num1);
 
+    /**
+     * Print all triplets bn, executed_time, total_time for which buildingNum1 <= bn <= buildingNum2
+     * @param num1 buildingNum1
+     * @param num2 buildingNum2
+     */
     static void printBuilding(uint num1, uint num2);
 };
 
