@@ -12,8 +12,20 @@ class MinHeap
 {
 public:
     MinHeap();
+
+    void insertNode(Node* p);
+    Node* extractMin();
+    Node* peekMin();
+
+    static void unitTest();
 private:
-    std::vector<Node*> _heap;
+    std::vector<Node*> heap_;
+
+    void heapify(uint idx);
+
+    uint getParent(const uint &idx);
+    uint getLeft(const uint &idx);
+    uint getRight(const uint &idx);
 };
 
 

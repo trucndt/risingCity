@@ -6,6 +6,7 @@
 #define SIMULATOR_H
 
 #include <RBT.h>
+#include <MinHeap.h>
 #include <string>
 #include <fstream>
 #include <utility>
@@ -42,6 +43,7 @@ private:
 
     inline static uint s_timestamp;
     inline static RBT* s_rbt;
+    inline static MinHeap* s_heap;
     inline static std::ifstream s_inFile;
     inline static std::ofstream s_outFile;
 

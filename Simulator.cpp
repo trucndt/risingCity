@@ -14,6 +14,7 @@ void Simulator::initialize(const std::string &inputFileName)
     s_timestamp = 0;
 
     s_rbt = new RBT();
+    s_heap = new MinHeap();
 }
 
 void Simulator::loop()
@@ -40,6 +41,7 @@ void Simulator::loop()
         case INSERT:
             auto nodeRbt = new NodeRBT(stoi(s_pendingCommand.data.substr(0, comma)), stoi(s_pendingCommand.data.substr(comma + 1)));
             s_rbt->insertNode(nodeRbt);
+            s_heap->insertNode(nodeRbt);
             break;
         }
     }

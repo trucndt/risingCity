@@ -9,11 +9,19 @@ Node::Node(uint buildingNums, ulong totalTime)
 
 bool Node::operator>(const Node &rhs) const
 {
+    if (this->data_.executedTime == rhs.data_.executedTime)
+    {
+        return this->data_.buildingNums > rhs.data_.buildingNums;
+    }
     return this->data_.executedTime > rhs.data_.executedTime;
 }
 
 bool Node::operator<(const Node &rhs) const
 {
+    if (this->data_.executedTime == rhs.data_.executedTime)
+    {
+        return this->data_.buildingNums < rhs.data_.buildingNums;
+    }
     return this->data_.executedTime < rhs.data_.executedTime;
 }
 
