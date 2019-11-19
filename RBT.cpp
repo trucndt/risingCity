@@ -55,6 +55,14 @@ void NodeRBT::setKey(uint key)
     this->data_.buildingNums = key;
 }
 
+uint NodeRBT::cntRedChild()
+{
+    uint cnt = 0;
+    if (this->left_ != nullptr && this->left_->color_ == RED) cnt++;
+    if (this->right_ != nullptr && this->right_->color_ == RED) cnt++;
+    return cnt;
+}
+
 void RBT::insertNode(NodeRBT *p)
 {
     insertNodeBST(p); // perform a normal BST insert
@@ -142,6 +150,299 @@ void RBT::insertNodeBST(NodeRBT *p)
     p->parent_ = parent;
 }
 
+bool RBT::deleteNode(uint key)
+{
+    auto p = searchNode(key);
+    if (p == nullptr)
+        return false;
+
+    deleteNode(p);
+    return true;
+}
+
+void RBT::deleteNode(NodeRBT *y)
+{
+    y = getReplaceNodeForDeletion(y);
+
+    if (y == root_) // y is root
+    {
+        root_ = nullptr;
+        delete y;
+        return;
+    }
+
+    if (y->color_ == RED)
+    {
+        deleteLeafNode(y);
+    }
+    else // y is black
+    {
+        if (y->left_ != nullptr || y->right_ != nullptr) // y is degree 1
+        {
+            auto py = y->parent_;
+            // short py to y's child
+            auto child = (y->left_ != nullptr)? y->left_ : y->right_;
+            child->parent_ = py;
+            if (y == py->left_)
+                py->left_ = child;
+            else
+                py->right_= child;
+
+            delete y;
+            y = child; //change y to the child
+        }
+
+        deleteBlackLeaf(y);
+    }
+}
+
+void RBT::deleteLeafNode(NodeRBT *p)
+{
+    if (p == p->parent_->left_)
+        p->parent_->left_ = nullptr;
+    else
+        p->parent_->right_ = nullptr;
+
+    delete p;
+}
+
+void RBT::deleteBlackLeaf(NodeRBT *y)
+{
+    if (y->color_ == RED)
+    {
+        y->color_ = BLACK;
+        return;
+    }
+
+    auto p = y;
+
+    while (y->color_ == BLACK && root_ != y)
+    {
+        auto py = y->parent_;
+
+        if (y == py->right_) //Rcn
+        {
+            auto v = py->left_;
+            if (v->color_ == BLACK) // Rbn
+            {
+                auto n = v->cntRedChild();
+                if (n == 0) // Rb0
+                {
+                    if (py->color_ == BLACK) // case 1
+                    {
+                        v->color_ = RED;
+                        y = py;
+                        continue;
+                    }
+                    else
+                    {
+                        py->color_ = BLACK;
+                        v->color_ = RED;
+                        break;
+                    }
+                }
+                else if (n == 1) // Rb1
+                {
+                    if (v->left_ != nullptr && v->left_->color_ == RED) // case 1
+                    {
+                        rotateLL(v);
+                        v->color_ = py->color_;
+                        v->left_->color_ = BLACK;
+                        py->color_ = BLACK;
+                        break;
+                    }
+                    else // case 2
+                    {
+                        auto w = v->right_;
+                        rotateLR(w);
+                        w->color_ = py->color_;
+                        py->color_ = BLACK;
+                        break;
+                    }
+                }
+                else // Rb2
+                {
+                    auto w = v->right_;
+                    rotateLR(w);
+                    w->color_ = py->color_;
+                    py->color_ = BLACK;
+                    break;
+                }
+            }
+            else // Rrn
+            {
+                auto w = v->right_;
+                auto n = w->cntRedChild();
+                if (n == 0) // Rr0
+                {
+                    rotateLL(v);
+                    v->color_ = BLACK;
+                    py->left_->color_ = RED;
+                    break;
+                }
+                else if (n == 1) // Rr1
+                {
+                    if (w->left_ != nullptr && w->left_->color_ == RED) // case 1
+                    {
+                        rotateLR(w);
+                        v->right_->color_ = BLACK;
+                        break;
+                    }
+                    else // case 2
+                    {
+                        auto x = w->right_;
+                        rotateRR(x);
+                        rotateRR(x);
+                        rotateLL(x);
+                        x->color_ = BLACK;
+                        break;
+                    }
+                }
+                else // Rr2
+                {
+                    auto x = w->right_;
+                    rotateRR(x);
+                    rotateRR(x);
+                    rotateLL(x);
+                    x->color_ = BLACK;
+                    break;
+                }
+            }
+        }
+        else // Lcn
+        {
+            auto v = py->right_;
+            if (v->color_ == BLACK) // Lbn
+            {
+                auto n = v->cntRedChild();
+                if (n == 0) // Lb0
+                {
+                    if (py->color_ == BLACK) // case 1
+                    {
+                        v->color_ = RED;
+                        y = py;
+                        continue;
+                    }
+                    else
+                    {
+                        py->color_ = BLACK;
+                        v->color_ = RED;
+                        break;
+                    }
+                }
+                else if (n == 1) // Lb1
+                {
+                    if (v->right_ != nullptr && v->right_->color_ == RED) // case 1
+                    {
+                        rotateRR(v);
+                        v->color_ = py->color_;
+                        v->right_->color_ = BLACK;
+                        py->color_ = BLACK;
+                        break;
+                    }
+                    else // case 2
+                    {
+                        auto w = v->left_;
+                        rotateRL(w);
+                        w->color_ = py->color_;
+                        py->color_ = BLACK;
+                        break;
+                    }
+                }
+                else // Lb2
+                {
+                    auto w = v->left_;
+                    rotateRL(w);
+                    w->color_ = py->color_;
+                    py->color_ = BLACK;
+                    break;
+                }
+            }
+            else // Lrn
+            {
+                auto w = v->left_;
+                auto n = w->cntRedChild();
+                if (n == 0) // Lr0
+                {
+                    rotateRR(v);
+                    v->color_ = BLACK;
+                    py->right_->color_ = RED;
+                    break;
+                }
+                else if (n == 1) // Lr1
+                {
+                    if (w->right_ != nullptr && w->right_->color_ == RED) // case 1
+                    {
+                        rotateRL(w);
+                        v->left_->color_ = BLACK;
+                        break;
+                    }
+                    else // case 2
+                    {
+                        auto x = w->left_;
+                        rotateLL(x);
+                        rotateLL(x);
+                        rotateRR(x);
+                        x->color_ = BLACK;
+                        break;
+                    }
+                }
+                else // Lr2
+                {
+                    auto x = w->left_;
+                    rotateLL(x);
+                    rotateLL(x);
+                    rotateRR(x);
+                    x->color_ = BLACK;
+                    break;
+                }
+            }
+        }
+    }
+
+    deleteLeafNode(p);
+}
+
+
+NodeRBT* RBT::searchNode(uint key)
+{
+    auto node = root_;
+
+    while (node != nullptr)
+    {
+        if (*node == key)
+            break;
+
+        if (*node < key)
+            node = node->right_;
+        else
+            node = node->left_;
+    }
+
+    return node;
+}
+
+NodeRBT *RBT::getReplaceNodeForDeletion(NodeRBT *p)
+{
+    if (p->left_ == nullptr && p->right_ == nullptr) // p is the leaf
+        return p;
+
+    if (p->left_ != nullptr && p->right_ != nullptr) // p has two children
+    {
+        // return the max of the left subtree
+        auto node = p->left_;
+        while (node->right_ != nullptr)
+            node = node->right_;
+
+        // swap key
+        p->swapKey(node);
+
+        return node;
+    }
+
+    return p;
+}
+
 void RBT::rotateRR(NodeRBT *y)
 {
     NodeRBT* z = y->parent_;
@@ -196,108 +497,4 @@ void RBT::rotateLR(NodeRBT *p)
 {
     rotateRR(p);
     rotateLL(p);
-}
-
-bool RBT::deleteNode(uint key)
-{
-    auto p = searchNode(key);
-    if (p == nullptr)
-        return false;
-
-    deleteNode(p);
-    return true;
-}
-
-void RBT::deleteNode(NodeRBT *p)
-{
-    p = getReplaceNodeForDeletion(p);
-
-    if (p->color_ == RED)
-    {
-        // so p must be a leaf?
-//        if (p->right_ == nullptr && p->left_ == nullptr) // p is a leaf
-//        {
-            if (p == p->parent_->left_)
-                p->parent_->left_ = nullptr;
-            else
-                p->parent_->right_ = nullptr;
-
-            delete p;
-//        }
-//        else // p has one child
-//        {
-//            auto child = (p->left_ != nullptr)? p->left_ : p->right_;
-//            if (p == p->parent_->left_)
-//                p->parent_->left_ = child;
-//            else
-//                p->parent_->right_ = child;
-//
-//            child->parent_ = p->parent_;
-//
-//            delete p;
-//        }
-    }
-    else
-    {
-        deleteBlackNode(p);
-    }
-}
-
-void RBT::deleteBlackNode(NodeRBT *p)
-{
-    if (p->parent_ == nullptr) // p is root
-    {
-        root_ = nullptr;
-        delete p;
-        return;
-    }
-
-    auto py = p->parent_;
-
-    if (p->left_ != nullptr || p->right_ != nullptr) // p has single child
-    {
-
-    }
-
-
-}
-
-
-NodeRBT* RBT::searchNode(uint key)
-{
-    auto node = root_;
-
-    while (node != nullptr)
-    {
-        if (*node == key)
-            break;
-
-        if (*node < key)
-            node = node->right_;
-        else
-            node = node->left_;
-    }
-
-    return node;
-}
-
-NodeRBT *RBT::getReplaceNodeForDeletion(NodeRBT *p)
-{
-    if (p->left_ == nullptr && p->right_ == nullptr) // p is the leaf
-        return p;
-
-    if (p->left_ != nullptr && p->right_ != nullptr) // p has two children
-    {
-        // return the max of the left subtree
-        auto node = p->left_;
-        while (node->right_ != nullptr)
-            node = node->right_;
-
-        // swap key
-        p->swapKey(node);
-
-        return node;
-    }
-
-    return p;
 }

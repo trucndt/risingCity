@@ -29,6 +29,7 @@ public:
     auto getKey();
     void setKey(uint key);
     void swapKey(NodeRBT* p);
+    uint cntRedChild();
 
     bool operator< (const NodeRBT &rhs);
     bool operator> (const NodeRBT &rhs);
@@ -54,7 +55,7 @@ public:
 
     bool deleteNode(uint key);
 
-    void deleteNode(NodeRBT* p);
+    void deleteNode(NodeRBT* y);
 
     NodeRBT* searchNode(uint key);
 
@@ -75,7 +76,9 @@ private:
      */
     NodeRBT * getReplaceNodeForDeletion(NodeRBT *p);
 
-    void deleteBlackNode(NodeRBT *p);
+    void deleteBlackLeaf(NodeRBT *y);
+
+    void deleteLeafNode(NodeRBT *p);
 
     void rotateRR(NodeRBT* y);
     void rotateLL(NodeRBT* y);

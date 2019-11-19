@@ -17,8 +17,9 @@ int main(int argc, char **argv)
     rbt->insertNode(new NodeRBT(10, 0));
     rbt->insertNode(new NodeRBT(11, 0));
     rbt->insertNode(new NodeRBT(12, 0));
+    rbt->insertNode(new NodeRBT(0, 0));
 
-    rbt->deleteNode(6);
+    rbt->deleteNode(7);
 
 //    NodeRBT* p1 = new NodeRBT(13, 0);
 //    NodeRBT* p2 = new NodeRBT(10, 0);
