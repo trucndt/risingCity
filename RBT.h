@@ -26,9 +26,14 @@ public:
     NodeRBT(uint buildingNums, ulong totalTime);
 
     NodeRBT* getUncleNode();
+    auto getKey();
+    void setKey(uint key);
+    void swapKey(NodeRBT* p);
 
     bool operator< (const NodeRBT &rhs);
     bool operator> (const NodeRBT &rhs);
+    bool operator< (const uint& key);
+    bool operator== (const uint& key);
 
 friend RBT;
 };
@@ -47,7 +52,11 @@ public:
      */
     void insertNode(NodeRBT* p);
 
+    bool deleteNode(uint key);
+
     void deleteNode(NodeRBT* p);
+
+    NodeRBT* searchNode(uint key);
 
 private:
     NodeRBT *root_;
@@ -57,6 +66,16 @@ private:
      * @param p node to insert
      */
     void insertNodeBST(NodeRBT *p);
+
+    /**
+     * Find a node from the tree that is used to swap with the *node to delete* using the Binary Search Tree algorithm,
+     * then swap the key and return the node that is either leaf or has a single child
+     * @param p node to delete
+     * @return the replace node
+     */
+    NodeRBT * getReplaceNodeForDeletion(NodeRBT *p);
+
+    void deleteBlackNode(NodeRBT *p);
 
     void rotateRR(NodeRBT* y);
     void rotateLL(NodeRBT* y);

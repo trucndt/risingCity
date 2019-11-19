@@ -20,12 +20,39 @@ bool NodeRBT::operator>(const NodeRBT &rhs)
     return this->data_.buildingNums > rhs.data_.buildingNums;
 }
 
+bool NodeRBT::operator<(const uint &key)
+{
+    return this->data_.buildingNums < key;
+}
+
+bool NodeRBT::operator==(const uint &key)
+{
+    return this->data_.buildingNums == key;
+}
+
 NodeRBT *NodeRBT::getUncleNode()
 {
     if (this->parent_->parent_->left_ == this->parent_)
         return this->parent_->parent_->right_;
     else
         return this->parent_->parent_->left_;
+}
+
+auto NodeRBT::getKey()
+{
+    return this->data_.buildingNums;
+}
+
+void NodeRBT::swapKey(NodeRBT *p)
+{
+    auto tmp = this->getKey();
+    this->setKey(p->getKey());
+    p->setKey(tmp);
+}
+
+void NodeRBT::setKey(uint key)
+{
+    this->data_.buildingNums = key;
 }
 
 void RBT::insertNode(NodeRBT *p)
@@ -169,4 +196,108 @@ void RBT::rotateLR(NodeRBT *p)
 {
     rotateRR(p);
     rotateLL(p);
+}
+
+bool RBT::deleteNode(uint key)
+{
+    auto p = searchNode(key);
+    if (p == nullptr)
+        return false;
+
+    deleteNode(p);
+    return true;
+}
+
+void RBT::deleteNode(NodeRBT *p)
+{
+    p = getReplaceNodeForDeletion(p);
+
+    if (p->color_ == RED)
+    {
+        // so p must be a leaf?
+//        if (p->right_ == nullptr && p->left_ == nullptr) // p is a leaf
+//        {
+            if (p == p->parent_->left_)
+                p->parent_->left_ = nullptr;
+            else
+                p->parent_->right_ = nullptr;
+
+            delete p;
+//        }
+//        else // p has one child
+//        {
+//            auto child = (p->left_ != nullptr)? p->left_ : p->right_;
+//            if (p == p->parent_->left_)
+//                p->parent_->left_ = child;
+//            else
+//                p->parent_->right_ = child;
+//
+//            child->parent_ = p->parent_;
+//
+//            delete p;
+//        }
+    }
+    else
+    {
+        deleteBlackNode(p);
+    }
+}
+
+void RBT::deleteBlackNode(NodeRBT *p)
+{
+    if (p->parent_ == nullptr) // p is root
+    {
+        root_ = nullptr;
+        delete p;
+        return;
+    }
+
+    auto py = p->parent_;
+
+    if (p->left_ != nullptr || p->right_ != nullptr) // p has single child
+    {
+
+    }
+
+
+}
+
+
+NodeRBT* RBT::searchNode(uint key)
+{
+    auto node = root_;
+
+    while (node != nullptr)
+    {
+        if (*node == key)
+            break;
+
+        if (*node < key)
+            node = node->right_;
+        else
+            node = node->left_;
+    }
+
+    return node;
+}
+
+NodeRBT *RBT::getReplaceNodeForDeletion(NodeRBT *p)
+{
+    if (p->left_ == nullptr && p->right_ == nullptr) // p is the leaf
+        return p;
+
+    if (p->left_ != nullptr && p->right_ != nullptr) // p has two children
+    {
+        // return the max of the left subtree
+        auto node = p->left_;
+        while (node->right_ != nullptr)
+            node = node->right_;
+
+        // swap key
+        p->swapKey(node);
+
+        return node;
+    }
+
+    return p;
 }
