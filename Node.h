@@ -24,6 +24,11 @@ protected:
         ulong executedTime;
         ulong totalTime;
     } data_;
+
+public:
+    [[nodiscard]] const Data &getData() const;
+    void setData(const Data &data);
+    void swapData(Node* p);
 };
 
 

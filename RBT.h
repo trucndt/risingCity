@@ -26,9 +26,6 @@ public:
     NodeRBT(uint buildingNums, ulong totalTime);
 
     NodeRBT* getUncleNode();
-    auto getKey();
-    void setKey(uint key);
-    void swapKey(NodeRBT* p);
     uint cntRedChild();
 
     bool operator< (const NodeRBT &rhs);

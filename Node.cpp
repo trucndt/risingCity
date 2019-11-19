@@ -16,3 +16,19 @@ bool Node::operator<(const Node &rhs) const
 {
     return this->data_.executedTime < rhs.data_.executedTime;
 }
+
+const Node::Data &Node::getData() const
+{
+    return data_;
+}
+void Node::setData(const Node::Data &data)
+{
+    data_ = data;
+}
+
+void Node::swapData(Node *p)
+{
+    auto tmp = this->getData();
+    this->setData(p->getData());
+    p->setData(tmp);
+}

@@ -38,23 +38,6 @@ NodeRBT *NodeRBT::getUncleNode()
         return this->parent_->parent_->left_;
 }
 
-auto NodeRBT::getKey()
-{
-    return this->data_.buildingNums;
-}
-
-void NodeRBT::swapKey(NodeRBT *p)
-{
-    auto tmp = this->getKey();
-    this->setKey(p->getKey());
-    p->setKey(tmp);
-}
-
-void NodeRBT::setKey(uint key)
-{
-    this->data_.buildingNums = key;
-}
-
 uint NodeRBT::cntRedChild()
 {
     uint cnt = 0;
@@ -434,8 +417,8 @@ NodeRBT *RBT::getReplaceNodeForDeletion(NodeRBT *p)
         while (node->right_ != nullptr)
             node = node->right_;
 
-        // swap key
-        p->swapKey(node);
+        // swap data
+        p->swapData(node);
 
         return node;
     }
@@ -508,11 +491,11 @@ void RBT::unitTest()
     this->insertNode(new NodeRBT(6, 0));
     this->insertNode(new NodeRBT(1, 0));
     this->insertNode(new NodeRBT(3, 0));
-    this->insertNode(new NodeRBT(4, 0));
+    this->insertNode(new NodeRBT(4, 1));
     this->insertNode(new NodeRBT(10, 0));
     this->insertNode(new NodeRBT(11, 0));
     this->insertNode(new NodeRBT(12, 0));
     this->insertNode(new NodeRBT(0, 0));
 
-    this->deleteNode(7);
+    this->deleteNode(6);
 }
