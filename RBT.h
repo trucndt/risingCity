@@ -59,6 +59,8 @@ public:
 
     NodeRBT* searchNode(uint key);
 
+    void unitTest();
+
 private:
     NodeRBT *root_;
 

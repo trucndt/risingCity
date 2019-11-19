@@ -190,6 +190,12 @@ void RBT::deleteNode(NodeRBT *y)
 
             delete y;
             y = child; //change y to the child
+
+            if (y->color_ == RED)
+            {
+                y->color_ = BLACK;
+                return;
+            }
         }
 
         deleteBlackLeaf(y);
@@ -208,12 +214,6 @@ void RBT::deleteLeafNode(NodeRBT *p)
 
 void RBT::deleteBlackLeaf(NodeRBT *y)
 {
-    if (y->color_ == RED)
-    {
-        y->color_ = BLACK;
-        return;
-    }
-
     auto p = y;
 
     while (y->color_ == BLACK && root_ != y)
@@ -497,4 +497,22 @@ void RBT::rotateLR(NodeRBT *p)
 {
     rotateRR(p);
     rotateLL(p);
+}
+
+void RBT::unitTest()
+{
+    this->insertNode(new NodeRBT(9, 0));
+    this->insertNode(new NodeRBT(8, 0));
+    this->insertNode(new NodeRBT(7, 0));
+    this->insertNode(new NodeRBT(2, 0));
+    this->insertNode(new NodeRBT(6, 0));
+    this->insertNode(new NodeRBT(1, 0));
+    this->insertNode(new NodeRBT(3, 0));
+    this->insertNode(new NodeRBT(4, 0));
+    this->insertNode(new NodeRBT(10, 0));
+    this->insertNode(new NodeRBT(11, 0));
+    this->insertNode(new NodeRBT(12, 0));
+    this->insertNode(new NodeRBT(0, 0));
+
+    this->deleteNode(7);
 }
