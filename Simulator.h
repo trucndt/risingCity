@@ -41,9 +41,12 @@ private:
 //            : time(time), eventType(eventType), data(std::move(data)) {}
     } s_pendingCommand;
 
-    inline static uint s_timestamp;
+    inline static long s_timestamp = 0;
+    inline static long s_cmdTime = -1;
+    inline static long s_buildingTime = -1;
     inline static RBT* s_rbt;
     inline static MinHeap* s_heap;
+    inline static Node* s_curBuilding = nullptr;
     inline static std::ifstream s_inFile;
     inline static std::ofstream s_outFile;
 
@@ -65,6 +68,16 @@ private:
      * @param num2 buildingNum2
      */
     static void printBuilding(uint num1, uint num2);
+
+    static long readCommand();
+
+    static void executePendingCommand();
+
+    static void updateCurBuilding(long timePassed);
+
+    static void chooseNextBuilding();
+
+    static void removeCurBuilding();
 };
 
 
