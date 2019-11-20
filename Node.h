@@ -34,7 +34,7 @@ private:
     int heapPos_;
 
 public:
-    [[nodiscard]] const Data &getData() const;
+    const Data &getData() const;
     void setData(const Data &data);
     void swapData(Node* p);
 

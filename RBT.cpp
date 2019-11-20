@@ -499,3 +499,33 @@ void RBT::unitTest()
 
     this->deleteNode(6);
 }
+
+void RBT::printRange(NodeRBT *root, const uint &left, const uint &right, ostream &out, bool comma)
+{
+    if (root == nullptr)
+        return;
+
+    const auto& key = root->getData().buildingNums;
+    if (left < key)
+        printRange(root->left_, left, right, out, comma);
+
+    if (left <= key && key <= right)
+    {
+        const auto& data = root->getData();
+        if (comma)
+            out << ',';
+        else
+            comma = true;
+
+        out << '(' << data.buildingNums << "," << data.executedTime << "," << data.totalTime << ")";
+    }
+
+    if (key < right)
+        printRange(root->right_, left, right, out, comma);
+}
+
+NodeRBT *RBT::getRoot() const
+{
+    return root_;
+}
+

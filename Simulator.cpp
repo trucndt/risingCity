@@ -108,7 +108,8 @@ void Simulator::printBuilding(uint num1)
 
 void Simulator::printBuilding(uint num1, uint num2)
 {
-    cout << num1 << num2 << endl;
+    RBT::printRange(s_rbt->getRoot(), num1, num2, cout);
+    cout << endl;
 }
 
 long Simulator::readCommand()
