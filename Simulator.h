@@ -69,14 +69,34 @@ private:
      */
     static void printBuilding(uint num1, uint num2);
 
+    /**
+     * Read a new command from the input file
+     * @return arrival time of the command
+     */
     static long readCommand();
 
+    /**
+     * Execute the command in s_pendingCommand
+     */
     static void executePendingCommand();
 
+    /**
+     * Update the executed time of the current building and update the s_heap accordingly
+     * @param timePassed units of time has passed since it was chosen
+     */
     static void updateCurBuilding(long timePassed);
 
-    static void chooseNextBuilding();
+    /**
+     * Choose a new building to work on based on s_heap
+     * @return
+     * <p>-1 if there is no building to work on</p>
+     * <p>the next timestamp to process the building</p>
+     */
+    static long chooseNextBuilding();
 
+    /**
+     * Remove the current building from s_heap, s_rbt, and set the pointer to null
+     */
     static void removeCurBuilding();
 };
 

@@ -22,9 +22,9 @@ void Simulator::loop()
     s_cmdTime = readCommand(); // read first command
 
     // event loop
-    while (s_cmdTime != -1 || !s_heap->isEmpty())
+    while (s_cmdTime != -1 || s_buildingTime != -1)
     {
-        if ((s_cmdTime <= s_buildingTime && s_cmdTime != -1) || s_curBuilding == nullptr)
+        if ((s_cmdTime <= s_buildingTime && s_cmdTime != -1) || s_buildingTime == -1)
         {
             if (s_curBuilding != nullptr)
             {
@@ -37,7 +37,7 @@ void Simulator::loop()
 
             s_cmdTime = readCommand();
         }
-        else if (s_curBuilding != nullptr)
+        else
         {
             updateCurBuilding(s_buildingTime - s_timestamp);
 
@@ -51,12 +51,12 @@ void Simulator::loop()
             }
 
             // choose new building to work on
-            chooseNextBuilding();
+            s_buildingTime = chooseNextBuilding();
         }
 
-        if (s_curBuilding == nullptr && !s_heap->isEmpty()) // find new building to work on
+        if (s_curBuilding == nullptr) // find new building to work on
         {
-            chooseNextBuilding();
+            s_buildingTime = chooseNextBuilding();
         }
 
     }
@@ -154,13 +154,16 @@ void Simulator::updateCurBuilding(long timePassed)
     s_heap->increaseKey(s_curBuilding);
 }
 
-void Simulator::chooseNextBuilding()
+long Simulator::chooseNextBuilding()
 {
+    if (s_heap->isEmpty())
+        return -1;
+
     s_curBuilding = s_heap->peekMin();
     const auto& buildingData = s_curBuilding->getData();
 
     int workingTime = min(buildingData.totalTime - buildingData.executedTime, (ulong)5);
-    s_buildingTime = s_timestamp + workingTime;
+    return s_timestamp + workingTime;
 }
 
 void Simulator::removeCurBuilding()
