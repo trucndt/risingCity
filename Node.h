@@ -7,11 +7,16 @@
 
 #include <cstdint>
 #include <sys/types.h>
+#include <MinHeap.h>
+
+class MinHeap;
 
 class Node
 {
 public:
     Node(uint buildingNums, ulong totalTime);
+
+    void updateExecutedTime(ulong newTime);
 
     virtual bool operator< (const Node& rhs) const;
     virtual bool operator> (const Node& rhs) const;
@@ -25,10 +30,15 @@ protected:
         ulong totalTime;
     } data_;
 
+private:
+    int heapPos_;
+
 public:
     [[nodiscard]] const Data &getData() const;
     void setData(const Data &data);
     void swapData(Node* p);
+
+friend MinHeap;
 };
 
 

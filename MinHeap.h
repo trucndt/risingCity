@@ -8,6 +8,8 @@
 #include <vector>
 #include <Node.h>
 
+class Node;
+
 class MinHeap
 {
 public:
@@ -16,12 +18,14 @@ public:
     void insertNode(Node* p);
     Node* extractMin();
     Node* peekMin();
+    void increaseKey(Node* p);
 
     static void unitTest();
 private:
     std::vector<Node*> heap_;
 
     void heapify(uint idx);
+    void swap(Node *&a, Node *&b);
 
     uint getParent(const uint &idx);
     uint getLeft(const uint &idx);

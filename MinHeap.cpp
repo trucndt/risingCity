@@ -3,6 +3,7 @@
 //
 
 #include "MinHeap.h"
+
 MinHeap::MinHeap()
 {
     heap_.reserve(2000);
@@ -13,11 +14,12 @@ void MinHeap::insertNode(Node *p)
     heap_.push_back(p);
 
     uint idx = heap_.size() - 1;
+    p->heapPos_ = idx;
 
     // pushing up
     while (idx != 0 && *heap_[getParent(idx)] > *heap_[idx])
     {
-        heap_[getParent(idx)]->swapData(heap_[idx]);
+        swap(heap_[getParent(idx)], heap_[idx]);
         idx = getParent(idx);
     }
 }
@@ -26,7 +28,7 @@ Node *MinHeap::extractMin()
 {
     Node* res = heap_[0];
 
-    heap_[0] = heap_.back();
+    swap(heap_[0], heap_.back());
     heap_.pop_back();
 
     heapify(0);
@@ -49,7 +51,7 @@ void MinHeap::heapify(uint idx)
 
     if (min != idx)
     {
-        heap_[idx]->swapData(heap_[min]);
+        swap(heap_[idx],heap_[min]);
         heapify(min);
     }
 }
@@ -58,6 +60,12 @@ Node *MinHeap::peekMin()
 {
     return heap_[0];
 }
+
+void MinHeap::increaseKey(Node *p)
+{
+    heapify(p->heapPos_);
+}
+
 
 uint MinHeap::getParent(const uint &idx)
 {
@@ -80,7 +88,8 @@ void MinHeap::unitTest()
     s->insertNode(new Node(7, 0));
     s->insertNode(new Node(2, 0));
     s->insertNode(new Node(6, 0));
-    s->insertNode(new Node(1, 0));
+    Node *p = new Node(1, 0);
+    s->insertNode(p);
     s->insertNode(new Node(3, 0));
 //    s->insertNode(new Node(4, 1));
 //    s->insertNode(new Node(10, 0));
@@ -88,5 +97,19 @@ void MinHeap::unitTest()
 //    s->insertNode(new Node(12, 0));
 //    s->insertNode(new Node(0, 0));
 
-    s->extractMin();
+    p->updateExecutedTime(1);
+    s->increaseKey(p);
+}
+
+void MinHeap::swap(Node *&a, Node *&b)
+{
+    // Swap pointer
+    Node *p = a;
+    a = b;
+    b = p;
+
+    // Swap pos
+    int tmp = a->heapPos_;
+    a->heapPos_ = b->heapPos_;
+    b->heapPos_ = tmp;
 }
