@@ -16,7 +16,7 @@ class Node
 public:
     Node(uint buildingNums, ulong totalTime);
 
-    void updateExecutedTime(ulong newTime);
+    void addExecutedTime(ulong addTime);
 
     virtual bool operator< (const Node& rhs) const;
     virtual bool operator> (const Node& rhs) const;

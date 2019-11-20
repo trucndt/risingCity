@@ -97,8 +97,9 @@ void MinHeap::unitTest()
 //    s->insertNode(new Node(12, 0));
 //    s->insertNode(new Node(0, 0));
 
-    p->updateExecutedTime(1);
-    s->increaseKey(p);
+//    p->addExecutedTime(1);
+//    s->increaseKey(p);
+    s->remove(p);
 }
 
 void MinHeap::swap(Node *&a, Node *&b)
@@ -112,4 +113,18 @@ void MinHeap::swap(Node *&a, Node *&b)
     int tmp = a->heapPos_;
     a->heapPos_ = b->heapPos_;
     b->heapPos_ = tmp;
+}
+
+bool MinHeap::isEmpty()
+{
+    return heap_.empty();
+}
+
+void MinHeap::remove(Node *p)
+{
+    int pos = p->heapPos_;
+    swap(heap_[pos], heap_.back());
+    heap_.pop_back();
+
+    heapify(pos);
 }

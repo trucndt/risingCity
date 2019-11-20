@@ -41,7 +41,7 @@ void Node::swapData(Node *p)
     p->setData(tmp);
 }
 
-void Node::updateExecutedTime(ulong newTime)
+void Node::addExecutedTime(ulong addTime)
 {
-    this->data_.executedTime = newTime;
+    this->data_.executedTime += addTime;
 }

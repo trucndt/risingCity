@@ -19,6 +19,8 @@ public:
     Node* extractMin();
     Node* peekMin();
     void increaseKey(Node* p);
+    bool isEmpty();
+    void remove(Node* p);
 
     static void unitTest();
 private:
