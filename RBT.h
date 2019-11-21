@@ -11,6 +11,7 @@
 
 class NodeRBT;
 
+/// A red-black tree data structure
 class RBT
 {
 public:

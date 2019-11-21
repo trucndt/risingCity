@@ -12,6 +12,7 @@ const NodeBase::Data &NodeBase::getData() const
 {
     return data_;
 }
+
 void NodeBase::setData(const NodeBase::Data &data)
 {
     data_ = data;
@@ -30,15 +31,13 @@ void NodeBase::addExecutedTime(ulong addTime)
 }
 
 NodeHeap::NodeHeap(uint buildingNums, ulong totalTime)
-    : NodeBase(buildingNums, totalTime), heapPos_(-1)
-{
-
-}
+    : NodeBase(buildingNums, totalTime), heapPos_(-1) {}
 
 bool NodeHeap::operator>(const NodeHeap &rhs) const
 {
     if (this->data_.executedTime == rhs.data_.executedTime)
     {
+        // compare building number if the exe time is the same
         return this->data_.buildingNums > rhs.data_.buildingNums;
     }
     return this->data_.executedTime > rhs.data_.executedTime;
@@ -48,19 +47,19 @@ bool NodeHeap::operator<(const NodeHeap &rhs) const
 {
     if (this->data_.executedTime == rhs.data_.executedTime)
     {
+        // compare building number if the exe time is the same
         return this->data_.buildingNums < rhs.data_.buildingNums;
     }
     return this->data_.executedTime < rhs.data_.executedTime;
 }
 
-ulong NodeHeap::getKey()
+ulong NodeHeap::getKey() const
 {
     return data_.executedTime;
 }
 
 NodeRBT::NodeRBT(uint buildingNums, ulong totalTime, NodeHeap *pointerToHeap)
-    : NodeBase(buildingNums, totalTime), color_(RED), pointerToHeap_(pointerToHeap)
-{}
+    : NodeBase(buildingNums, totalTime), color_(RED), pointerToHeap_(pointerToHeap) {}
 
 bool NodeRBT::operator<(const NodeRBT &rhs)
 {
@@ -90,9 +89,9 @@ NodeRBT *NodeRBT::getUncleNode()
         return this->parent_->parent_->left_;
 }
 
-uint NodeRBT::cntRedChild()
+uint8_t NodeRBT::cntRedChild()
 {
-    uint cnt = 0;
+    uint8_t cnt = 0;
     if (this->left_ != nullptr && this->left_->color_ == RED) cnt++;
     if (this->right_ != nullptr && this->right_->color_ == RED) cnt++;
     return cnt;
@@ -100,7 +99,7 @@ uint NodeRBT::cntRedChild()
 
 void NodeRBT::addExecutedTime(ulong addTime)
 {
-    NodeBase::addExecutedTime(addTime);
+    NodeBase::addExecutedTime(addTime); // call the base function
     pointerToHeap_->addExecutedTime(addTime);
 }
 
@@ -113,13 +112,16 @@ void NodeRBT::swapData(NodeBase *p)
 {
     NodeBase::swapData(p);
 
-    auto node = static_cast<NodeRBT*>(p);
-    auto tmp = node->pointerToHeap_;
-    node->pointerToHeap_ = this->pointerToHeap_;
-    this->pointerToHeap_ = tmp;
+    // we are sure that the other node is of type NodeRBT, this is just for safety
+    if (auto node = dynamic_cast<NodeRBT*>(p))
+    {
+        auto tmp = node->pointerToHeap_;
+        node->pointerToHeap_ = this->pointerToHeap_;
+        this->pointerToHeap_ = tmp;
+    }
 }
 
-ulong NodeRBT::getKey()
+ulong NodeRBT::getKey() const
 {
     return data_.buildingNums;
 }

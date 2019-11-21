@@ -147,6 +147,7 @@ void Simulator::executePendingCommand()
         printBuilding(num1, num2);
         break;
     case INSERT:
+        // TODO check for duplication before insert
         auto nodeHeap = new NodeHeap(num1, num2);
         s_heap->insertNode(nodeHeap);
         s_rbt->insertNode(new NodeRBT(num1, num2, nodeHeap));

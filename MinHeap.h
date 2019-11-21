@@ -10,6 +10,7 @@
 
 class NodeHeap;
 
+/// A min heap data structure
 class MinHeap
 {
 public:
