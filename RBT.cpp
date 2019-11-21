@@ -349,6 +349,7 @@ NodeRBT* RBT::searchNode(uint key)
 {
     auto node = root_;
 
+    // like BST search
     while (node != nullptr)
     {
         if (*node == key)
@@ -442,35 +443,36 @@ void RBT::rotateLR(NodeRBT *p)
 
 void RBT::unitTest()
 {
-    this->insertNode(new NodeRBT(9, 0, nullptr));
-    this->insertNode(new NodeRBT(8, 0, nullptr));
-    this->insertNode(new NodeRBT(7, 0, nullptr));
-    this->insertNode(new NodeRBT(2, 0, nullptr));
-    this->insertNode(new NodeRBT(6, 0, nullptr));
-    this->insertNode(new NodeRBT(1, 0, nullptr));
-    this->insertNode(new NodeRBT(3, 0, nullptr));
-    this->insertNode(new NodeRBT(4, 1, nullptr));
-    this->insertNode(new NodeRBT(10, 0, nullptr));
-    this->insertNode(new NodeRBT(11, 0, nullptr));
-    this->insertNode(new NodeRBT(12, 0, nullptr));
-    this->insertNode(new NodeRBT(0, 0, nullptr));
+    auto rbt = new RBT();
+    rbt->insertNode(new NodeRBT(9, 0, nullptr));
+    rbt->insertNode(new NodeRBT(8, 0, nullptr));
+    rbt->insertNode(new NodeRBT(7, 0, nullptr));
+    rbt->insertNode(new NodeRBT(2, 0, nullptr));
+    rbt->insertNode(new NodeRBT(6, 0, nullptr));
+    rbt->insertNode(new NodeRBT(1, 0, nullptr));
+    rbt->insertNode(new NodeRBT(3, 0, nullptr));
+    rbt->insertNode(new NodeRBT(4, 1, nullptr));
+    rbt->insertNode(new NodeRBT(10, 0, nullptr));
+    rbt->insertNode(new NodeRBT(11, 0, nullptr));
+    rbt->insertNode(new NodeRBT(12, 0, nullptr));
+    rbt->insertNode(new NodeRBT(0, 0, nullptr));
 
-    this->deleteNode(6);
+    rbt->deleteNode(6);
 }
 
 void RBT::printRange(NodeRBT *root, const uint &left, const uint &right, ostream &out, bool& comma)
 {
-    if (root == nullptr)
+    if (root == nullptr) // base case
         return;
 
-    const auto& key = root->getData().buildingNums;
-    if (left < key)
+    const auto& key = root->getKey();
+    if (left < key) // we could go further left
         printRange(root->left_, left, right, out, comma);
 
-    if (left <= key && key <= right)
+    if (left <= key && key <= right) // the key is within range
     {
         const auto& data = root->getData();
-        if (comma)
+        if (comma) // don't print comma on the first print
             out << ',';
         else
             comma = true;
@@ -478,7 +480,7 @@ void RBT::printRange(NodeRBT *root, const uint &left, const uint &right, ostream
         out << '(' << data.buildingNums << "," << data.executedTime << "," << data.totalTime << ")";
     }
 
-    if (key < right)
+    if (key < right) // we could go further right
         printRange(root->right_, left, right, out, comma);
 }
 

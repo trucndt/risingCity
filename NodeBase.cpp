@@ -53,6 +53,11 @@ bool NodeHeap::operator<(const NodeHeap &rhs) const
     return this->data_.executedTime < rhs.data_.executedTime;
 }
 
+ulong NodeHeap::getKey()
+{
+    return data_.executedTime;
+}
+
 NodeRBT::NodeRBT(uint buildingNums, ulong totalTime, NodeHeap *pointerToHeap)
     : NodeBase(buildingNums, totalTime), color_(RED), pointerToHeap_(pointerToHeap)
 {}
@@ -112,4 +117,9 @@ void NodeRBT::swapData(NodeBase *p)
     auto tmp = node->pointerToHeap_;
     node->pointerToHeap_ = this->pointerToHeap_;
     this->pointerToHeap_ = tmp;
+}
+
+ulong NodeRBT::getKey()
+{
+    return data_.buildingNums;
 }

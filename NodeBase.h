@@ -20,6 +20,7 @@ public:
 
     virtual void addExecutedTime(ulong addTime);
     virtual void swapData(NodeBase* p);
+    virtual ulong getKey() = 0;
 
 protected:
     /// buildingNums, executed_time, total_time
@@ -46,6 +47,8 @@ class NodeHeap : public NodeBase
 public:
     NodeHeap(uint buildingNums, ulong totalTime);
 
+    virtual ulong getKey();
+
     virtual bool operator< (const NodeHeap& rhs) const;
     virtual bool operator> (const NodeHeap& rhs) const;
 
@@ -62,6 +65,7 @@ public:
 
     virtual void addExecutedTime(ulong addTime);
     virtual void swapData(NodeBase* p);
+    virtual ulong getKey();
 
     bool operator< (const NodeRBT &rhs);
     bool operator> (const NodeRBT &rhs);
