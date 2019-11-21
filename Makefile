@@ -1,9 +1,10 @@
 CXX=g++
 RM=rm -f
-CPPFLAGS=-O3 -DNDEBUG -std=gnu++1z -I$(shell pwd)
+SRC_DIR=.
+CPPFLAGS=-O3 -DNDEBUG -std=gnu++1z -I$(SRC_DIR)
 LDFLAGS=-O3 -DNDEBUG -std=gnu++1z
 
-SRCS=main.cpp RBT.cpp NodeBase.cpp Simulator.cpp MinHeap.cpp
+SRCS=$(wildcard *.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: risingCity
