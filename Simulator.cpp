@@ -108,7 +108,8 @@ void Simulator::printBuilding(uint num1)
 
 void Simulator::printBuilding(uint num1, uint num2)
 {
-    RBT::printRange(s_rbt->getRoot(), num1, num2, cout);
+    bool a = false;
+    RBT::printRange(s_rbt->getRoot(), num1, num2, cout, a);
     cout << endl;
 }
 
@@ -171,6 +172,7 @@ void Simulator::removeCurBuilding()
 {
     const auto& data = s_curBuilding->getData();
     cout << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
+
     s_heap->remove(s_curBuilding);
     s_rbt->deleteNode(static_cast<NodeRBT*>(s_curBuilding));
     s_curBuilding = nullptr;

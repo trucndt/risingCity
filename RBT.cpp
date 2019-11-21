@@ -500,7 +500,7 @@ void RBT::unitTest()
     this->deleteNode(6);
 }
 
-void RBT::printRange(NodeRBT *root, const uint &left, const uint &right, ostream &out, bool comma)
+void RBT::printRange(NodeRBT *root, const uint &left, const uint &right, ostream &out, bool& comma)
 {
     if (root == nullptr)
         return;

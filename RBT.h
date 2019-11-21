@@ -57,7 +57,7 @@ public:
 
     NodeRBT* searchNode(uint key);
 
-    static void printRange(NodeRBT *root, const uint &left, const uint &right, std::ostream &out, bool comma = false);
+    static void printRange(NodeRBT *root, const uint &left, const uint &right, std::ostream &out, bool &comma);
 
     void unitTest();
 
@@ -65,8 +65,6 @@ public:
 
 private:
     NodeRBT *root_;
-
-private:
 
     /**
      * Insert node to the tree using the Binary Search Tree algorithm
