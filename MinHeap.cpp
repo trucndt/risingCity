@@ -82,24 +82,24 @@ uint MinHeap::getRight(const uint &idx)
 
 void MinHeap::unitTest()
 {
-    MinHeap *s = new MinHeap();
-//    s->insertNode(new NodeHeap(9, 0));
-//    s->insertNode(new NodeHeap(8, 0));
-//    s->insertNode(new NodeHeap(7, 0));
-//    s->insertNode(new NodeHeap(2, 0));
-//    s->insertNode(new NodeHeap(6, 0));
-//    NodeHeap *p = new NodeHeap(1, 0);
-//    s->insertNode(p);
-//    s->insertNode(new NodeHeap(3, 0));
-//    s->insertNode(new NodeHeap(4, 1));
-//    s->insertNode(new NodeHeap(10, 0));
-//    s->insertNode(new NodeHeap(11, 0));
-//    s->insertNode(new NodeHeap(12, 0));
-//    s->insertNode(new NodeHeap(0, 0));
+    auto *s = new MinHeap();
+    s->insertNode(new NodeHeap(9, 0));
+    s->insertNode(new NodeHeap(8, 0));
+    s->insertNode(new NodeHeap(7, 0));
+    s->insertNode(new NodeHeap(2, 0));
+    s->insertNode(new NodeHeap(6, 0));
+    auto *p = new NodeHeap(1, 0);
+    s->insertNode(p);
+    s->insertNode(new NodeHeap(3, 0));
+    s->insertNode(new NodeHeap(4, 1));
+    s->insertNode(new NodeHeap(10, 0));
+    s->insertNode(new NodeHeap(11, 0));
+    s->insertNode(new NodeHeap(12, 0));
+    s->insertNode(new NodeHeap(0, 0));
 
-//    p->addExecutedTime(1);
-//    s->increaseKey(p);
-//    s->remove(p);
+    p->addExecutedTime(1);
+    s->increaseKey(p);
+    s->remove(p);
 }
 
 void MinHeap::swap(NodeHeap *&a, NodeHeap *&b)
@@ -123,10 +123,20 @@ bool MinHeap::isEmpty()
 void MinHeap::remove(NodeHeap *p)
 {
     int pos = p->heapPos_;
+
+    delete p;
+
+    if (pos == heap_.size() - 1)
+    {
+        heap_.pop_back();
+
+        return;
+    }
+
     swap(heap_[pos], heap_.back());
     heap_.pop_back();
 
-    if (*heap_[pos] > *heap_[getParent(pos)])
+    if (pos == 0 || *heap_[pos] > *heap_[getParent(pos)])
     {
         heapify(pos);
         return;

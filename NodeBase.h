@@ -8,8 +8,10 @@
 #include <cstdint>
 #include <sys/types.h>
 #include <RBT.h>
+#include <MinHeap.h>
 
 class RBT;
+class MinHeap;
 
 class NodeBase
 {
@@ -17,6 +19,7 @@ public:
     NodeBase(uint buildingNums, ulong totalTime);
 
     virtual void addExecutedTime(ulong addTime);
+    virtual void swapData(NodeBase* p);
 
 protected:
     /// buildingNums, executed_time, total_time
@@ -30,7 +33,6 @@ protected:
 public:
     const Data &getData() const;
     void setData(const Data &data);
-    virtual void swapData(NodeBase* p);
 };
 
 enum COLOR
@@ -39,38 +41,45 @@ enum COLOR
     BLACK
 };
 
+class NodeHeap : public NodeBase
+{
+public:
+    NodeHeap(uint buildingNums, ulong totalTime);
+
+    virtual bool operator< (const NodeHeap& rhs) const;
+    virtual bool operator> (const NodeHeap& rhs) const;
+
+private:
+    int heapPos_;
+
+friend MinHeap;
+};
+
 class NodeRBT : public NodeBase
 {
-private:
-    uint8_t color_;
-    NodeRBT *left_ = nullptr, *right_ = nullptr, *parent_ = nullptr;
-
 public:
-    NodeRBT(uint buildingNums, ulong totalTime);
+    NodeRBT(uint buildingNums, ulong totalTime, NodeHeap *pointerToHeap);
 
-    NodeRBT* getUncleNode();
-    uint cntRedChild();
+    virtual void addExecutedTime(ulong addTime);
+    virtual void swapData(NodeBase* p);
 
     bool operator< (const NodeRBT &rhs);
     bool operator> (const NodeRBT &rhs);
     bool operator< (const uint& key);
     bool operator== (const uint& key);
 
+    NodeHeap *getNodeHeap() const;
+
+private:
+    uint8_t color_;
+    NodeRBT *left_ = nullptr, *right_ = nullptr, *parent_ = nullptr;
+
+    NodeHeap* pointerToHeap_;
+
+    NodeRBT* getUncleNode();
+    uint cntRedChild();
+
 friend RBT;
-};
-
-class NodeHeap : public NodeBase
-{
-public:
-    NodeHeap(uint buildingNums, ulong totalTime, NodeRBT* pointerToRBT);
-
-    virtual void addExecutedTime(ulong addTime);
-
-    virtual bool operator< (const NodeHeap& rhs) const;
-    virtual bool operator> (const NodeHeap& rhs) const;
-
-    int heapPos_;
-    NodeRBT* pointerToRBT_;
 };
 
 

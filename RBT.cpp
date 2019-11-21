@@ -107,13 +107,6 @@ void RBT::deleteNode(NodeRBT *y)
 {
     y = getReplaceNodeForDeletion(y);
 
-    if (y == root_) // y is root
-    {
-        root_ = nullptr;
-        delete y;
-        return;
-    }
-
     if (y->color_ == RED)
     {
         deleteLeafNode(y);
@@ -126,7 +119,10 @@ void RBT::deleteNode(NodeRBT *y)
             // short py to y's child
             auto child = (y->left_ != nullptr)? y->left_ : y->right_;
             child->parent_ = py;
-            if (y == py->left_)
+
+            if (py == nullptr)
+                root_ = child;
+            else if (y == py->left_)
                 py->left_ = child;
             else
                 py->right_= child;
@@ -147,7 +143,9 @@ void RBT::deleteNode(NodeRBT *y)
 
 void RBT::deleteLeafNode(NodeRBT *p)
 {
-    if (p == p->parent_->left_)
+    if (p->parent_ == nullptr)
+        root_ = nullptr;
+    else if (p == p->parent_->left_)
         p->parent_->left_ = nullptr;
     else
         p->parent_->right_ = nullptr;
@@ -444,18 +442,18 @@ void RBT::rotateLR(NodeRBT *p)
 
 void RBT::unitTest()
 {
-    this->insertNode(new NodeRBT(9, 0));
-    this->insertNode(new NodeRBT(8, 0));
-    this->insertNode(new NodeRBT(7, 0));
-    this->insertNode(new NodeRBT(2, 0));
-    this->insertNode(new NodeRBT(6, 0));
-    this->insertNode(new NodeRBT(1, 0));
-    this->insertNode(new NodeRBT(3, 0));
-    this->insertNode(new NodeRBT(4, 1));
-    this->insertNode(new NodeRBT(10, 0));
-    this->insertNode(new NodeRBT(11, 0));
-    this->insertNode(new NodeRBT(12, 0));
-    this->insertNode(new NodeRBT(0, 0));
+    this->insertNode(new NodeRBT(9, 0, nullptr));
+    this->insertNode(new NodeRBT(8, 0, nullptr));
+    this->insertNode(new NodeRBT(7, 0, nullptr));
+    this->insertNode(new NodeRBT(2, 0, nullptr));
+    this->insertNode(new NodeRBT(6, 0, nullptr));
+    this->insertNode(new NodeRBT(1, 0, nullptr));
+    this->insertNode(new NodeRBT(3, 0, nullptr));
+    this->insertNode(new NodeRBT(4, 1, nullptr));
+    this->insertNode(new NodeRBT(10, 0, nullptr));
+    this->insertNode(new NodeRBT(11, 0, nullptr));
+    this->insertNode(new NodeRBT(12, 0, nullptr));
+    this->insertNode(new NodeRBT(0, 0, nullptr));
 
     this->deleteNode(6);
 }

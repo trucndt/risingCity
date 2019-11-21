@@ -8,6 +8,8 @@
 #include <vector>
 #include <NodeBase.h>
 
+class NodeHeap;
+
 class MinHeap
 {
 public:

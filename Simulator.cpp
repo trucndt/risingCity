@@ -108,9 +108,11 @@ void Simulator::printBuilding(uint num1)
 
 void Simulator::printBuilding(uint num1, uint num2)
 {
-    bool a = false;
-    RBT::printRange(s_rbt->getRoot(), num1, num2, cout, a);
-    cout << endl;
+    bool comma = false;
+    RBT::printRange(s_rbt->getRoot(), num1, num2, cout, comma);
+
+    if (comma) // something was printed
+        cout << endl;
 }
 
 long Simulator::readCommand()
@@ -143,9 +145,9 @@ void Simulator::executePendingCommand()
         printBuilding(num1, num2);
         break;
     case INSERT:
-        auto nodeRbt = new NodeRBT(num1, num2);
-        s_rbt->insertNode(nodeRbt);
-        s_heap->insertNode(new NodeHeap(num1, num2, nodeRbt));
+        auto nodeHeap = new NodeHeap(num1, num2);
+        s_heap->insertNode(nodeHeap);
+        s_rbt->insertNode(new NodeRBT(num1, num2, nodeHeap));
         break;
     }
 }
@@ -155,7 +157,7 @@ void Simulator::updateCurBuilding(long timePassed)
     if (timePassed == 0)
         return;
     s_curBuilding->addExecutedTime(timePassed);
-    s_heap->increaseKey(s_curBuilding);
+    s_heap->increaseKey(s_curBuilding->getNodeHeap());
 }
 
 long Simulator::chooseNextBuilding()
@@ -163,7 +165,7 @@ long Simulator::chooseNextBuilding()
     if (s_heap->isEmpty())
         return -1;
 
-    s_curBuilding = s_heap->peekMin();
+    s_curBuilding = s_rbt->searchNode(s_heap->peekMin()->getData().buildingNums);
     const auto& buildingData = s_curBuilding->getData();
 
     int workingTime = min(buildingData.totalTime - buildingData.executedTime, (ulong)5);
@@ -175,8 +177,9 @@ void Simulator::removeCurBuilding()
     const auto& data = s_curBuilding->getData();
     cout << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
-    s_heap->remove(s_curBuilding);
-    s_rbt->deleteNode(s_curBuilding->pointerToRBT_);
+    auto nodeHeap = s_curBuilding->getNodeHeap();
+    s_heap->remove(nodeHeap);
+    s_rbt->deleteNode(s_curBuilding);
     s_curBuilding = nullptr;
 }
 

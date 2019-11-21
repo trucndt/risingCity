@@ -29,9 +29,32 @@ void NodeBase::addExecutedTime(ulong addTime)
     this->data_.executedTime += addTime;
 }
 
+NodeHeap::NodeHeap(uint buildingNums, ulong totalTime)
+    : NodeBase(buildingNums, totalTime), heapPos_(-1)
+{
 
-NodeRBT::NodeRBT(uint buildingNums, ulong totalTime)
-    : NodeBase(buildingNums, totalTime), color_(RED)
+}
+
+bool NodeHeap::operator>(const NodeHeap &rhs) const
+{
+    if (this->data_.executedTime == rhs.data_.executedTime)
+    {
+        return this->data_.buildingNums > rhs.data_.buildingNums;
+    }
+    return this->data_.executedTime > rhs.data_.executedTime;
+}
+
+bool NodeHeap::operator<(const NodeHeap &rhs) const
+{
+    if (this->data_.executedTime == rhs.data_.executedTime)
+    {
+        return this->data_.buildingNums < rhs.data_.buildingNums;
+    }
+    return this->data_.executedTime < rhs.data_.executedTime;
+}
+
+NodeRBT::NodeRBT(uint buildingNums, ulong totalTime, NodeHeap *pointerToHeap)
+    : NodeBase(buildingNums, totalTime), color_(RED), pointerToHeap_(pointerToHeap)
 {}
 
 bool NodeRBT::operator<(const NodeRBT &rhs)
@@ -70,33 +93,23 @@ uint NodeRBT::cntRedChild()
     return cnt;
 }
 
-
-NodeHeap::NodeHeap(uint buildingNums, ulong totalTime, NodeRBT* pointerToRBT)
-    : NodeBase(buildingNums, totalTime), heapPos_(-1), pointerToRBT_(pointerToRBT)
-{
-
-}
-
-bool NodeHeap::operator>(const NodeHeap &rhs) const
-{
-    if (this->data_.executedTime == rhs.data_.executedTime)
-    {
-        return this->data_.buildingNums > rhs.data_.buildingNums;
-    }
-    return this->data_.executedTime > rhs.data_.executedTime;
-}
-
-bool NodeHeap::operator<(const NodeHeap &rhs) const
-{
-    if (this->data_.executedTime == rhs.data_.executedTime)
-    {
-        return this->data_.buildingNums < rhs.data_.buildingNums;
-    }
-    return this->data_.executedTime < rhs.data_.executedTime;
-}
-
-void NodeHeap::addExecutedTime(ulong addTime)
+void NodeRBT::addExecutedTime(ulong addTime)
 {
     NodeBase::addExecutedTime(addTime);
-    pointerToRBT_->addExecutedTime(addTime);
+    pointerToHeap_->addExecutedTime(addTime);
+}
+
+NodeHeap *NodeRBT::getNodeHeap() const
+{
+    return pointerToHeap_;
+}
+
+void NodeRBT::swapData(NodeBase *p)
+{
+    NodeBase::swapData(p);
+
+    auto node = static_cast<NodeRBT*>(p);
+    auto tmp = node->pointerToHeap_;
+    node->pointerToHeap_ = this->pointerToHeap_;
+    this->pointerToHeap_ = tmp;
 }
