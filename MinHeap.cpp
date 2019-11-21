@@ -11,7 +11,7 @@ MinHeap::MinHeap()
 
 void MinHeap::insertNode(NodeHeap *p)
 {
-    heap_.push_back(p);
+    heap_.push_back(p); // add node the the last place in the heap
 
     uint idx = heap_.size() - 1;
     p->heapPos_ = idx;
@@ -28,6 +28,7 @@ NodeHeap *MinHeap::extractMin()
 {
     NodeHeap* res = heap_[0];
 
+    // swap the root with the last item and remove the last index
     swap(heap_[0], heap_.back());
     heap_.pop_back();
 
@@ -43,6 +44,7 @@ void MinHeap::heapify(uint idx)
     auto min = idx;
     auto n = heap_.size();
 
+    // Get the index of the smallest children
     if (l < n && *heap_[l] < *heap_[min])
         min = l;
 
@@ -51,7 +53,7 @@ void MinHeap::heapify(uint idx)
 
     if (min != idx)
     {
-        swap(heap_[idx],heap_[min]);
+        swap(heap_[idx],heap_[min]); // swap with that children and heapify from that index
         heapify(min);
     }
 }
@@ -124,7 +126,7 @@ void MinHeap::remove(NodeHeap *p)
 {
     int pos = p->heapPos_;
 
-    if (pos == heap_.size() - 1)
+    if (pos == heap_.size() - 1) // This is that last item from the heap, just remove it
     {
         heap_.pop_back();
         delete p;
@@ -132,17 +134,20 @@ void MinHeap::remove(NodeHeap *p)
         return;
     }
 
+    // swap with the last node in the heap and remove that last item
     swap(heap_[pos], heap_.back());
     heap_.pop_back();
 
     delete p;
 
+    // if the replaced node is greater than the parent then heapify
     if (pos == 0 || *heap_[pos] > *heap_[getParent(pos)])
     {
         heapify(pos);
         return;
     }
 
+    // if not, push the node up
     while (pos != 0 && *heap_[getParent(pos)] > *heap_[pos])
     {
         swap(heap_[getParent(pos)], heap_[pos]);
