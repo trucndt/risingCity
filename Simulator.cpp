@@ -113,6 +113,8 @@ void Simulator::printBuilding(uint num1, uint num2)
 
     if (comma) // something was printed
         s_outFile << endl;
+    else
+        s_outFile << "(0,0,0)" << endl;
 }
 
 long Simulator::readCommand()
