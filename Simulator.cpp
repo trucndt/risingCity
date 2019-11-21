@@ -19,29 +19,41 @@ void Simulator::initialize(const std::string &inputFileName)
 
 void Simulator::loop()
 {
+    /**
+     * There are two kinds of event in this loop:
+     *  1. Read the next command, represented by s_cmdTime
+     *  2. Choose the next building, represented by s_buildingTime
+     * If there is no event, the corresponding variables are set to -1. At each timestamp, the simulator chooses to work
+     * on the event with the smallest timestamp
+     */
+
     s_cmdTime = readCommand(); // read first command
 
     // event loop
-    while (s_cmdTime != -1 || s_buildingTime != -1)
+    while (s_cmdTime != -1 || s_buildingTime != -1) // There is some event
     {
         if ((s_cmdTime <= s_buildingTime && s_cmdTime != -1) || s_buildingTime == -1)
         {
-            if (s_curBuilding != nullptr)
+            // This is the event for reading the next command
+
+            if (s_curBuilding != nullptr) // If there is a building being built then update the exe time
             {
                 updateCurBuilding(s_cmdTime - s_timestamp);
             }
 
-            s_timestamp = s_cmdTime;
+            s_timestamp = s_cmdTime; // update the global time
 
             executePendingCommand();
 
-            s_cmdTime = readCommand();
+            s_cmdTime = readCommand(); // get the next read command event
         }
         else
         {
-            updateCurBuilding(s_buildingTime - s_timestamp);
+            // This is the event for choosing the next building
 
-            s_timestamp = s_buildingTime;
+            updateCurBuilding(s_buildingTime - s_timestamp); // Update the exe time of the current building
+
+            s_timestamp = s_buildingTime; // update the global time
 
             const auto& buildingData = s_curBuilding->getData();
 
@@ -79,23 +91,23 @@ void Simulator::parseCommand(const std::string &cmdStr)
     s_pendingCommand.data = data;
 
     // Get command type
-    const auto &eventType = cmdStr.substr(colon + 2, paren - colon - 2);
-    if (eventType == "Insert")
-        s_pendingCommand.eventType = INSERT;
-    else if (eventType == "PrintBuilding")
+    const auto &cmdType = cmdStr.substr(colon + 2, paren - colon - 2);
+    if (cmdType == "Insert")
+        s_pendingCommand.cmdType = INSERT;
+    else if (cmdType == "PrintBuilding")
     {
         if (data.find(',') == string::npos)
-            s_pendingCommand.eventType = PRINT1;
+            s_pendingCommand.cmdType = PRINT1;
         else
-            s_pendingCommand.eventType = PRINT2;
+            s_pendingCommand.cmdType = PRINT2;
     }
 }
 
 void Simulator::printBuilding(uint num1)
 {
-    auto p = s_rbt->searchNode(num1);
+    auto p = s_rbt->searchNode(num1); // search for the building
 
-    if (p == nullptr)
+    if (p == nullptr) // not found
     {
         s_outFile << "(0,0,0)" << endl;
     }
@@ -120,9 +132,9 @@ void Simulator::printBuilding(uint num1, uint num2)
 long Simulator::readCommand()
 {
     string line;
-    if (getline(s_inFile, line))
+    if (getline(s_inFile, line)) // get the entire a line
     {
-        if (!line.empty() && line[line.size() - 1] == '\r')
+        if (!line.empty() && line[line.size() - 1] == '\r') // remove trailing line endings
             line.erase(line.size() - 1);
 
         parseCommand(line);
@@ -134,11 +146,17 @@ long Simulator::readCommand()
 
 void Simulator::executePendingCommand()
 {
+    /*
+     * Extract info from the command field
+     */
     auto comma = s_pendingCommand.data.find(',');
     auto num1 = stoi(s_pendingCommand.data.substr(0, comma));
     auto num2 = stoi(s_pendingCommand.data.substr(comma + 1));
 
-    switch (s_pendingCommand.eventType)
+    /*
+     * Act upon the command type
+     */
+    switch (s_pendingCommand.cmdType)
     {
     case PRINT1:
         printBuilding(stoi(s_pendingCommand.data));
@@ -147,20 +165,24 @@ void Simulator::executePendingCommand()
         printBuilding(num1, num2);
         break;
     case INSERT:
-        // TODO check for duplication before insert
-        auto nodeHeap = new NodeHeap(num1, num2);
-        s_heap->insertNode(nodeHeap);
-        s_rbt->insertNode(new NodeRBT(num1, num2, nodeHeap));
+        if (s_rbt->searchNode(num1) != nullptr) // check for duplication before insert
+        {
+            exit(1);
+        }
+
+        auto nodeHeap = new NodeHeap(num1, num2); // create a new heap node
+        s_heap->insertNode(nodeHeap); // insert to the heap
+        s_rbt->insertNode(new NodeRBT(num1, num2, nodeHeap)); // create and insert the corresponding rbt node
         break;
     }
 }
 
 void Simulator::updateCurBuilding(long timePassed)
 {
-    if (timePassed == 0)
+    if (timePassed == 0) // nothing to update
         return;
-    s_curBuilding->addExecutedTime(timePassed);
-    s_heap->increaseKey(s_curBuilding->getNodeHeap());
+    s_curBuilding->addExecutedTime(timePassed); // update exe time
+    s_heap->increaseKey(s_curBuilding->getNodeHeap()); // update the heap
 }
 
 long Simulator::chooseNextBuilding()
@@ -168,21 +190,26 @@ long Simulator::chooseNextBuilding()
     if (s_heap->isEmpty())
         return -1;
 
+    // search for the node with buildingNums in the rbt and select that node
     s_curBuilding = s_rbt->searchNode(s_heap->peekMin()->getData().buildingNums);
     const auto& buildingData = s_curBuilding->getData();
 
+    // calculate the working time of the building
     int workingTime = min(buildingData.totalTime - buildingData.executedTime, (ulong)5);
-    return s_timestamp + workingTime;
+    return s_timestamp + workingTime; // get the next event for choosing a new building
 }
 
 void Simulator::removeCurBuilding()
 {
+    /*
+     * Print out the building info
+     */
     const auto& data = s_curBuilding->getData();
     s_outFile << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
-    auto nodeHeap = s_curBuilding->getNodeHeap();
-    s_heap->remove(nodeHeap);
-    s_rbt->deleteNode(s_curBuilding);
-    s_curBuilding = nullptr;
+    auto nodeHeap = s_curBuilding->getNodeHeap(); // get node heap
+    s_heap->remove(nodeHeap); // remove from the heap
+    s_rbt->deleteNode(s_curBuilding); // remove from the rbt
+    s_curBuilding = nullptr; // set to null
 }
 

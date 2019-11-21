@@ -11,6 +11,7 @@
 #include <fstream>
 #include <utility>
 
+/// A static class for the discrete-event simulator
 class Simulator
 {
 public:
@@ -29,26 +30,24 @@ public:
     static void loop();
 
 private:
-    enum EventType {INSERT, PRINT1, PRINT2};
+    /// Define types of events
+    enum CommandType {INSERT, PRINT1, PRINT2};
 
     inline static struct
     {
-        uint arrivalTime;
-        EventType eventType;
-        std::string data;
+        uint arrivalTime; // Arrival time of the command
+        CommandType cmdType; // Type of command
+        std::string data; // Data field
+    } s_pendingCommand; // The pending command
 
-//        Command(uint time, EventType eventType, std::string data)
-//            : time(time), eventType(eventType), data(std::move(data)) {}
-    } s_pendingCommand;
-
-    inline static long s_timestamp = 0;
-    inline static long s_cmdTime = -1;
-    inline static long s_buildingTime = -1;
-    inline static RBT* s_rbt;
-    inline static MinHeap* s_heap;
-    inline static NodeRBT* s_curBuilding = nullptr;
-    inline static std::ifstream s_inFile;
-    inline static std::ofstream s_outFile;
+    inline static long s_timestamp = 0; // The global time counter
+    inline static long s_cmdTime = -1; // Next timestamp to read the command
+    inline static long s_buildingTime = -1; // Next timestamp to choose a new building
+    inline static RBT* s_rbt; // Pointer to a red-black tree
+    inline static MinHeap* s_heap; // Pointer to a min heap
+    inline static NodeRBT* s_curBuilding = nullptr; // The current selected building
+    inline static std::ifstream s_inFile; // Stream of the input file
+    inline static std::ofstream s_outFile; // Stream of the output file
 
     /**
      * Parse command string and save to s_pendingCommand
@@ -82,7 +81,7 @@ private:
 
     /**
      * Update the executed time of the current building and update the s_heap accordingly
-     * @param timePassed units of time has passed since it was chosen
+     * @param timePassed units of time has passed since it was last updated
      */
     static void updateCurBuilding(long timePassed);
 
@@ -90,7 +89,7 @@ private:
      * Choose a new building to work on based on s_heap
      * @return
      * <p>-1 if there is no building to work on</p>
-     * <p>the next timestamp to process the building</p>
+     * <p>the next timestamp to choose the next building</p>
      */
     static long chooseNextBuilding();
 
