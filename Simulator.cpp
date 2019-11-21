@@ -131,6 +131,8 @@ long Simulator::readCommand()
 void Simulator::executePendingCommand()
 {
     auto comma = s_pendingCommand.data.find(',');
+    auto num1 = stoi(s_pendingCommand.data.substr(0, comma));
+    auto num2 = stoi(s_pendingCommand.data.substr(comma + 1));
 
     switch (s_pendingCommand.eventType)
     {
@@ -138,12 +140,12 @@ void Simulator::executePendingCommand()
         printBuilding(stoi(s_pendingCommand.data));
         break;
     case PRINT2:
-        printBuilding(stoi(s_pendingCommand.data.substr(0, comma)), stoi(s_pendingCommand.data.substr(comma + 1)));
+        printBuilding(num1, num2);
         break;
     case INSERT:
-        auto nodeRbt = new NodeRBT(stoi(s_pendingCommand.data.substr(0, comma)), stoi(s_pendingCommand.data.substr(comma + 1)));
+        auto nodeRbt = new NodeRBT(num1, num2);
         s_rbt->insertNode(nodeRbt);
-        s_heap->insertNode(nodeRbt);
+        s_heap->insertNode(new NodeHeap(num1, num2, nodeRbt));
         break;
     }
 }
@@ -174,7 +176,7 @@ void Simulator::removeCurBuilding()
     cout << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
     s_heap->remove(s_curBuilding);
-    s_rbt->deleteNode(static_cast<NodeRBT*>(s_curBuilding));
+    s_rbt->deleteNode(s_curBuilding->pointerToRBT_);
     s_curBuilding = nullptr;
 }
 

@@ -6,36 +6,10 @@
 #define RBT_H
 
 #include <cstdint>
-#include <Node.h>
+#include <NodeBase.h>
 #include <fstream>
 
-class RBT;
-
-enum COLOR
-{
-    RED,
-    BLACK
-};
-
-class NodeRBT : public Node
-{
-private:
-    uint8_t color_;
-    NodeRBT *left_ = nullptr, *right_ = nullptr, *parent_ = nullptr;
-
-public:
-    NodeRBT(uint buildingNums, ulong totalTime);
-
-    NodeRBT* getUncleNode();
-    uint cntRedChild();
-
-    bool operator< (const NodeRBT &rhs);
-    bool operator> (const NodeRBT &rhs);
-    bool operator< (const uint& key);
-    bool operator== (const uint& key);
-
-friend RBT;
-};
+class NodeRBT;
 
 class RBT
 {

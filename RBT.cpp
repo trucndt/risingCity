@@ -6,46 +6,6 @@
 
 using namespace std;
 
-NodeRBT::NodeRBT(uint buildingNums, ulong totalTime)
-    : Node(buildingNums, totalTime), color_(RED)
-{}
-
-bool NodeRBT::operator<(const NodeRBT &rhs)
-{
-    return this->data_.buildingNums < rhs.data_.buildingNums;
-}
-
-bool NodeRBT::operator>(const NodeRBT &rhs)
-{
-    return this->data_.buildingNums > rhs.data_.buildingNums;
-}
-
-bool NodeRBT::operator<(const uint &key)
-{
-    return this->data_.buildingNums < key;
-}
-
-bool NodeRBT::operator==(const uint &key)
-{
-    return this->data_.buildingNums == key;
-}
-
-NodeRBT *NodeRBT::getUncleNode()
-{
-    if (this->parent_->parent_->left_ == this->parent_)
-        return this->parent_->parent_->right_;
-    else
-        return this->parent_->parent_->left_;
-}
-
-uint NodeRBT::cntRedChild()
-{
-    uint cnt = 0;
-    if (this->left_ != nullptr && this->left_->color_ == RED) cnt++;
-    if (this->right_ != nullptr && this->right_->color_ == RED) cnt++;
-    return cnt;
-}
-
 void RBT::insertNode(NodeRBT *p)
 {
     insertNodeBST(p); // perform a normal BST insert

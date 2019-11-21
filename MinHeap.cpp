@@ -9,7 +9,7 @@ MinHeap::MinHeap()
     heap_.reserve(2000);
 }
 
-void MinHeap::insertNode(Node *p)
+void MinHeap::insertNode(NodeHeap *p)
 {
     heap_.push_back(p);
 
@@ -24,9 +24,9 @@ void MinHeap::insertNode(Node *p)
     }
 }
 
-Node *MinHeap::extractMin()
+NodeHeap *MinHeap::extractMin()
 {
-    Node* res = heap_[0];
+    NodeHeap* res = heap_[0];
 
     swap(heap_[0], heap_.back());
     heap_.pop_back();
@@ -56,12 +56,12 @@ void MinHeap::heapify(uint idx)
     }
 }
 
-Node *MinHeap::peekMin()
+NodeHeap *MinHeap::peekMin()
 {
     return heap_[0];
 }
 
-void MinHeap::increaseKey(Node *p)
+void MinHeap::increaseKey(NodeHeap *p)
 {
     heapify(p->heapPos_);
 }
@@ -83,29 +83,29 @@ uint MinHeap::getRight(const uint &idx)
 void MinHeap::unitTest()
 {
     MinHeap *s = new MinHeap();
-    s->insertNode(new Node(9, 0));
-    s->insertNode(new Node(8, 0));
-    s->insertNode(new Node(7, 0));
-    s->insertNode(new Node(2, 0));
-    s->insertNode(new Node(6, 0));
-    Node *p = new Node(1, 0);
-    s->insertNode(p);
-    s->insertNode(new Node(3, 0));
-//    s->insertNode(new Node(4, 1));
-//    s->insertNode(new Node(10, 0));
-//    s->insertNode(new Node(11, 0));
-//    s->insertNode(new Node(12, 0));
-//    s->insertNode(new Node(0, 0));
+//    s->insertNode(new NodeHeap(9, 0));
+//    s->insertNode(new NodeHeap(8, 0));
+//    s->insertNode(new NodeHeap(7, 0));
+//    s->insertNode(new NodeHeap(2, 0));
+//    s->insertNode(new NodeHeap(6, 0));
+//    NodeHeap *p = new NodeHeap(1, 0);
+//    s->insertNode(p);
+//    s->insertNode(new NodeHeap(3, 0));
+//    s->insertNode(new NodeHeap(4, 1));
+//    s->insertNode(new NodeHeap(10, 0));
+//    s->insertNode(new NodeHeap(11, 0));
+//    s->insertNode(new NodeHeap(12, 0));
+//    s->insertNode(new NodeHeap(0, 0));
 
 //    p->addExecutedTime(1);
 //    s->increaseKey(p);
-    s->remove(p);
+//    s->remove(p);
 }
 
-void MinHeap::swap(Node *&a, Node *&b)
+void MinHeap::swap(NodeHeap *&a, NodeHeap *&b)
 {
     // Swap pointer
-    Node *p = a;
+    NodeHeap *p = a;
     a = b;
     b = p;
 
@@ -120,11 +120,21 @@ bool MinHeap::isEmpty()
     return heap_.empty();
 }
 
-void MinHeap::remove(Node *p)
+void MinHeap::remove(NodeHeap *p)
 {
     int pos = p->heapPos_;
     swap(heap_[pos], heap_.back());
     heap_.pop_back();
 
-    heapify(pos);
+    if (*heap_[pos] > *heap_[getParent(pos)])
+    {
+        heapify(pos);
+        return;
+    }
+
+    while (pos != 0 && *heap_[getParent(pos)] > *heap_[pos])
+    {
+        swap(heap_[getParent(pos)], heap_[pos]);
+        pos = getParent(pos);
+    }
 }

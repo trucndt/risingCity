@@ -6,28 +6,26 @@
 #define MINHEAP_H
 
 #include <vector>
-#include <Node.h>
-
-class Node;
+#include <NodeBase.h>
 
 class MinHeap
 {
 public:
     MinHeap();
 
-    void insertNode(Node* p);
-    Node* extractMin();
-    Node* peekMin();
-    void increaseKey(Node* p);
+    void insertNode(NodeHeap *p);
+    NodeHeap* extractMin();
+    NodeHeap* peekMin();
+    void increaseKey(NodeHeap* p);
     bool isEmpty();
-    void remove(Node* p);
+    void remove(NodeHeap* p);
 
     static void unitTest();
-private:
-    std::vector<Node*> heap_;
+//private:
+    std::vector<NodeHeap*> heap_;
 
     void heapify(uint idx);
-    void swap(Node *&a, Node *&b);
+    void swap(NodeHeap *&a, NodeHeap *&b);
 
     uint getParent(const uint &idx);
     uint getLeft(const uint &idx);
