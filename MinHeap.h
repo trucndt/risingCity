@@ -23,7 +23,8 @@ public:
     void remove(NodeHeap* p);
 
     static void unitTest();
-//private:
+
+private:
     std::vector<NodeHeap*> heap_;
 
     void heapify(uint idx);

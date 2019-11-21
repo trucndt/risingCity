@@ -97,22 +97,22 @@ void Simulator::printBuilding(uint num1)
 
     if (p == nullptr)
     {
-        cout << "(0,0,0)" << endl;
+        s_outFile << "(0,0,0)" << endl;
     }
     else
     {
         const auto& data = p->getData();
-        cout << "(" << data.buildingNums << "," << data.executedTime << "," << data.totalTime << ")" << endl;
+        s_outFile << "(" << data.buildingNums << "," << data.executedTime << "," << data.totalTime << ")" << endl;
     }
 }
 
 void Simulator::printBuilding(uint num1, uint num2)
 {
     bool comma = false;
-    RBT::printRange(s_rbt->getRoot(), num1, num2, cout, comma);
+    RBT::printRange(s_rbt->getRoot(), num1, num2, s_outFile, comma);
 
     if (comma) // something was printed
-        cout << endl;
+        s_outFile << endl;
 }
 
 long Simulator::readCommand()
@@ -175,7 +175,7 @@ long Simulator::chooseNextBuilding()
 void Simulator::removeCurBuilding()
 {
     const auto& data = s_curBuilding->getData();
-    cout << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
+    s_outFile << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
     auto nodeHeap = s_curBuilding->getNodeHeap();
     s_heap->remove(nodeHeap);

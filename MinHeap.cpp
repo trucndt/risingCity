@@ -124,17 +124,18 @@ void MinHeap::remove(NodeHeap *p)
 {
     int pos = p->heapPos_;
 
-    delete p;
-
     if (pos == heap_.size() - 1)
     {
         heap_.pop_back();
+        delete p;
 
         return;
     }
 
     swap(heap_[pos], heap_.back());
     heap_.pop_back();
+
+    delete p;
 
     if (pos == 0 || *heap_[pos] > *heap_[getParent(pos)])
     {
