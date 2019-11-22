@@ -4,6 +4,7 @@ int main(int argc, char **argv)
 {
     Simulator::initialize(argv[1]); // initialize the Simulator
     Simulator::loop(); // start the Simulator
+    Simulator::close();
 
     return 0;
 }

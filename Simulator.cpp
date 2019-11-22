@@ -9,8 +9,8 @@ using namespace std;
 
 void Simulator::initialize(const std::string &inputFileName)
 {
-    s_inFile.open(inputFileName);
-    s_outFile.open("output_file.txt");
+    s_inFile = new ifstream(inputFileName);
+    s_outFile = new ofstream("output_file.txt");
     s_timestamp = 0;
 
     s_rbt = new RBT();
@@ -36,10 +36,7 @@ void Simulator::loop()
         {
             // This is the event for reading the next command
 
-            if (s_curBuilding != nullptr) // If there is a building being built then update the exe time
-            {
-                updateCurBuilding(s_cmdTime - s_timestamp);
-            }
+            updateCurBuilding(s_cmdTime - s_timestamp); // Update the exe time of the current building
 
             s_timestamp = s_cmdTime; // update the global time
 
@@ -109,30 +106,30 @@ void Simulator::printBuilding(uint num1)
 
     if (p == nullptr) // not found
     {
-        s_outFile << "(0,0,0)" << endl;
+        *s_outFile << "(0,0,0)" << endl;
     }
     else
     {
         const auto& data = p->getData();
-        s_outFile << "(" << data.buildingNums << "," << data.executedTime << "," << data.totalTime << ")" << endl;
+        *s_outFile << "(" << data.buildingNums << "," << data.executedTime << "," << data.totalTime << ")" << endl;
     }
 }
 
 void Simulator::printBuilding(uint num1, uint num2)
 {
     bool comma = false;
-    RBT::printRange(s_rbt->getRoot(), num1, num2, s_outFile, comma);
+    RBT::printRange(s_rbt->getRoot(), num1, num2, *s_outFile, comma);
 
     if (comma) // something was printed
-        s_outFile << endl;
+        *s_outFile << endl;
     else
-        s_outFile << "(0,0,0)" << endl;
+        *s_outFile << "(0,0,0)" << endl;
 }
 
 long Simulator::readCommand()
 {
     string line;
-    if (getline(s_inFile, line)) // get the entire a line
+    if (getline(*s_inFile, line)) // get the entire a line
     {
         if (!line.empty() && line[line.size() - 1] == '\r') // remove trailing line endings
             line.erase(line.size() - 1);
@@ -179,7 +176,7 @@ void Simulator::executePendingCommand()
 
 void Simulator::updateCurBuilding(long timePassed)
 {
-    if (timePassed == 0) // nothing to update
+    if (timePassed == 0 || s_curBuilding == nullptr) // nothing to update
         return;
     s_curBuilding->addExecutedTime(timePassed); // update exe time
     s_heap->increaseKey(s_curBuilding->getNodeHeap()); // update the heap
@@ -205,11 +202,21 @@ void Simulator::removeCurBuilding()
      * Print out the building info
      */
     const auto& data = s_curBuilding->getData();
-    s_outFile << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
+    *s_outFile << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
     auto nodeHeap = s_curBuilding->getNodeHeap(); // get node heap
     s_heap->remove(nodeHeap); // remove from the heap
     s_rbt->deleteNode(s_curBuilding); // remove from the rbt
     s_curBuilding = nullptr; // set to null
+}
+
+void Simulator::close()
+{
+    delete s_rbt;
+    delete s_heap;
+    s_inFile->close();
+    s_outFile->close();
+    delete s_inFile;
+    delete s_outFile;
 }
 

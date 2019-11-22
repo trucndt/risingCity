@@ -25,6 +25,11 @@ public:
     static void initialize(const std::string& inputFileName);
 
     /**
+     * Close the Simulator
+     */
+    static void close();
+
+    /**
      * Implement event loop for the simulator
      */
     static void loop();
@@ -46,8 +51,8 @@ private:
     inline static RBT* s_rbt; // Pointer to a red-black tree
     inline static MinHeap* s_heap; // Pointer to a min heap
     inline static NodeRBT* s_curBuilding = nullptr; // The current selected building
-    inline static std::ifstream s_inFile; // Stream of the input file
-    inline static std::ofstream s_outFile; // Stream of the output file
+    inline static std::ifstream* s_inFile = nullptr; // Stream of the input file
+    inline static std::ofstream* s_outFile = nullptr; // Stream of the output file
 
     /**
      * Parse command string and save to s_pendingCommand
