@@ -85,12 +85,6 @@ private:
     static void executePendingCommand();
 
     /**
-     * Update the executed time of the current building and update the s_heap accordingly
-     * @param timePassed units of time has passed since it was last updated
-     */
-    static void updateCurBuilding(long timePassed);
-
-    /**
      * Choose a new building to work on based on s_heap
      * @return
      * <p>-1 if there is no building to work on</p>

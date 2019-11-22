@@ -36,7 +36,8 @@ void Simulator::loop()
         {
             // This is the event for reading the next command
 
-            updateCurBuilding(s_cmdTime - s_timestamp); // Update the exe time of the current building
+            if (s_curBuilding != nullptr)
+                s_curBuilding->addExecutedTime(s_cmdTime - s_timestamp); // Update the exe time of the current building
 
             s_timestamp = s_cmdTime; // update the global time
 
@@ -47,17 +48,24 @@ void Simulator::loop()
         else
         {
             // This is the event for choosing the next building
-
-            updateCurBuilding(s_buildingTime - s_timestamp); // Update the exe time of the current building
+            if (s_curBuilding != nullptr)
+                s_curBuilding->addExecutedTime(s_buildingTime - s_timestamp); // Update the exe time of the current building
 
             s_timestamp = s_buildingTime; // update the global time
 
             const auto& buildingData = s_curBuilding->getData();
 
-            if (buildingData.executedTime == buildingData.totalTime) // remove building
+            if (buildingData.executedTime == buildingData.totalTime) // If the building is finished
             {
+                // remove building
                 removeCurBuilding();
             }
+            else
+            {
+                // reinsert it to the heap
+                s_heap->insertNode(s_curBuilding->getNodeHeap());
+            }
+
 
             // choose new building to work on
             s_buildingTime = chooseNextBuilding();
@@ -174,21 +182,13 @@ void Simulator::executePendingCommand()
     }
 }
 
-void Simulator::updateCurBuilding(long timePassed)
-{
-    if (timePassed == 0 || s_curBuilding == nullptr) // nothing to update
-        return;
-    s_curBuilding->addExecutedTime(timePassed); // update exe time
-    s_heap->increaseKey(s_curBuilding->getNodeHeap()); // update the heap
-}
-
 long Simulator::chooseNextBuilding()
 {
     if (s_heap->isEmpty())
         return -1;
 
     // search for the node with buildingNums in the rbt and select that node
-    s_curBuilding = s_rbt->searchNode(s_heap->peekMin()->getData().buildingNums);
+    s_curBuilding = s_rbt->searchNode(s_heap->extractMin()->getData().buildingNums);
     const auto& buildingData = s_curBuilding->getData();
 
     // calculate the working time of the building
@@ -204,8 +204,8 @@ void Simulator::removeCurBuilding()
     const auto& data = s_curBuilding->getData();
     *s_outFile << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
-    auto nodeHeap = s_curBuilding->getNodeHeap(); // get node heap
-    s_heap->remove(nodeHeap); // remove from the heap
+//    auto nodeHeap = s_curBuilding->getNodeHeap(); // get node heap
+//    s_heap->remove(nodeHeap); // remove from the heap
     s_rbt->deleteNode(s_curBuilding); // remove from the rbt
     s_curBuilding = nullptr; // set to null
 }

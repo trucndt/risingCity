@@ -31,6 +31,7 @@ NodeHeap *MinHeap::extractMin()
     // swap the root with the last item and remove the last index
     swap(heap_[0], heap_.back());
     heap_.pop_back();
+    res->heapPos_ = -1;
 
     heapify(0);
 
