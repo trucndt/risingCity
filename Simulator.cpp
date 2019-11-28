@@ -170,10 +170,10 @@ void Simulator::executePendingCommand()
         printBuilding(num1, num2);
         break;
     case INSERT:
-        if (s_rbt->searchNode(num1) != nullptr) // check for duplication before insert
-        {
-            exit(1);
-        }
+//        if (s_rbt->searchNode(num1) != nullptr) // check for duplication before insert
+//        {
+//            exit(1);
+//        }
 
         auto nodeHeap = new NodeHeap(num1, num2); // create a new heap node
         s_heap->insertNode(nodeHeap); // insert to the heap
