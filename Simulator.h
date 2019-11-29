@@ -40,19 +40,35 @@ private:
 
     inline static struct
     {
-        uint arrivalTime; // Arrival time of the command
-        CommandType cmdType; // Type of command
-        std::string data; // Data field
-    } s_pendingCommand; // The pending command
+        /// Arrival time of the command
+        uint arrivalTime;
+        /// Type of command
+        CommandType cmdType;
+        /// Data field
+        std::string data;
+    }
+    /// The pending command
+    s_pendingCommand;
 
-    inline static long s_timestamp = 0; // The global time counter
-    inline static long s_cmdTime = -1; // Next timestamp to read the command
-    inline static long s_buildingTime = -1; // Next timestamp to choose a new building
-    inline static RBT* s_rbt; // Pointer to a red-black tree
-    inline static MinHeap* s_heap; // Pointer to a min heap
-    inline static NodeRBT* s_curBuilding = nullptr; // The current selected building
-    inline static std::ifstream* s_inFile = nullptr; // Stream of the input file
-    inline static std::ofstream* s_outFile = nullptr; // Stream of the output file
+    /// The global time counter
+    inline static long s_timestamp = 0;
+
+    /// Next timestamp to read the command
+    inline static long s_cmdTime = -1;
+
+    /// Next timestamp to choose a new building
+    inline static long s_buildingTime = -1;
+
+    /// Pointer to a red-black tree
+    inline static RBT* s_rbt;
+    /// Pointer to a min heap
+    inline static MinHeap* s_heap;
+    /// The current selected building
+    inline static NodeRBT* s_curBuilding = nullptr;
+    /// Stream of the input file
+    inline static std::ifstream* s_inFile = nullptr;
+    /// Stream of the output file
+    inline static std::ofstream* s_outFile = nullptr;
 
     /**
      * Parse command string and save to s_pendingCommand

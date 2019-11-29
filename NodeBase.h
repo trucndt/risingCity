@@ -175,11 +175,13 @@ public:
     bool operator== (const uint& key);
 
 private:
-    uint8_t color_; // Color of the node
+    /// Color of the node
+    uint8_t color_;
     /// Pointers to related nodes
     NodeRBT *left_ = nullptr, *right_ = nullptr, *parent_ = nullptr;
 
-    NodeHeap* pointerToHeap_; // Pointer to the corresponding node in heap
+    /// Pointer to the corresponding node in heap
+    NodeHeap* pointerToHeap_;
 
     /**
      * Get uncle node. Make sure it has the a grand parent
