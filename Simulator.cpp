@@ -204,8 +204,8 @@ void Simulator::removeCurBuilding()
     const auto& data = s_curBuilding->getData();
     *s_outFile << "(" << data.buildingNums << "," << s_timestamp << ")" << endl;
 
-//    auto nodeHeap = s_curBuilding->getNodeHeap(); // get node heap
-//    s_heap->remove(nodeHeap); // remove from the heap
+    delete s_curBuilding->getNodeHeap(); // Delete node heap
+
     s_rbt->deleteNode(s_curBuilding); // remove from the rbt
     s_curBuilding = nullptr; // set to null
 }
