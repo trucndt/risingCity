@@ -1,10 +1,10 @@
 CXX=g++
 RM=rm -f
-SRC_DIR=.
+SRC_DIR=src
 CPPFLAGS=-O3 -DNDEBUG -std=gnu++1z -I$(SRC_DIR)
 LDFLAGS=-O3 -DNDEBUG -std=gnu++1z
 
-SRCS=$(wildcard *.cpp)
+SRCS=$(wildcard $(SRC_DIR)/*.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 all: risingCity
