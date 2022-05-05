@@ -1,5 +1,5 @@
 # Project of COP 5536 Fall 2019
-Dinh Nguyen (UFID: 9482-7764)
+Truc Nguyen (UFID: 9482-7764)
 
 truc.nguyen@ufl.edu
 
